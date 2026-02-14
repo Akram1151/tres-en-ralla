@@ -1,29 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Partida: {{ $game->player_x }} (X) vs {{ $game->player_o }} (O)</h1>
-    <div>
-        <strong>Torn:</strong> {{ $game->turn }}
+    <h1 class="mb-3">Partida: <span class="text-danger">{{ $game->player_x }} (X)</span> vs <span class="text-primary">{{ $game->player_o }} (O)</span></h1>
+    <div class="mb-3">
+        <strong>Torn:</strong> <span class="{{ $game->turn === 'X' ? 'text-danger' : 'text-primary' }}">{{ $game->turn }}</span>
         @if($game->winner)
-            <div><strong>Guanyador:</strong> {{ $game->winner }}</div>
+            <div class="alert alert-success mt-2"><strong>Guanyador:</strong> {{ $game->winner }}</div>
         @elseif($game->is_draw)
-            <div><strong>Empat!</strong></div>
+            <div class="alert alert-secondary mt-2"><strong>Empat!</strong></div>
         @endif
     </div>
     <form method="POST" action="{{ route('games.update', $game) }}">
         @csrf
         @method('PATCH')
-        <table style="border-collapse: collapse;">
+        <table class="table table-bordered text-center align-middle" style="width: 220px;">
             <tbody>
             @for($row = 0; $row < 3; $row++)
                 <tr>
                 @for($col = 0; $col < 3; $col++)
                     @php $cell = $row * 3 + $col; @endphp
-                    <td style="width: 50px; height: 50px; text-align: center; border: 1px solid #000;">
+                    <td style="width: 70px; height: 70px;">
                         @if($game->board[$cell])
-                            <span style="font-size: 2em;">{{ $game->board[$cell] }}</span>
+                            <span class="display-4 fw-bold {{ $game->board[$cell] === 'X' ? 'text-danger' : 'text-primary' }}">{{ $game->board[$cell] }}</span>
                         @elseif(!$game->winner && !$game->is_draw)
-                            <button name="cell" value="{{ $cell }}" style="width:100%;height:100%;font-size:2em;">-</button>
+                            <button name="cell" value="{{ $cell }}" class="btn btn-outline-dark w-100 h-100" style="font-size:2em;">-</button>
                         @else
                             -
                         @endif
@@ -34,5 +34,5 @@
             </tbody>
         </table>
     </form>
-    <a href="{{ route('games.index') }}">Tornar a la llista</a>
+    <a href="{{ route('games.index') }}" class="btn btn-link">Tornar a la llista</a>
 @endsection
