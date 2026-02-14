@@ -1,4 +1,7 @@
+
 <?php
+// API per moviments AJAX
+Route::patch('/api/games/{game}', [App\Http\Controllers\GameController::class, 'apiUpdate'])->name('games.api.update');
 
 use Illuminate\Support\Facades\Route;
 

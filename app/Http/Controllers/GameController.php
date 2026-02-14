@@ -81,4 +81,34 @@ class GameController extends Controller
         }
         return null;
     }
+
+    // API: Actualitzar estat de la partida via AJAX
+    public function apiUpdate(Request $request, Game $game)
+    {
+        $data = $request->validate([
+            'cell' => 'required|integer|min:0|max:8',
+        ]);
+        $board = $game->board;
+        $moveMade = false;
+        if ($board[$data['cell']] === null && $game->winner === null && !$game->is_draw) {
+            $board[$data['cell']] = $game->turn;
+            $winner = $this->checkWinner($board);
+            $is_draw = !$winner && !in_array(null, $board, true);
+            $game->update([
+                'board' => $board,
+                'turn' => $game->turn === 'X' ? 'O' : 'X',
+                'winner' => $winner,
+                'is_draw' => $is_draw,
+            ]);
+            $moveMade = true;
+        }
+        $game->refresh();
+        return response()->json([
+            'success' => $moveMade,
+            'board' => $game->board,
+            'turn' => $game->turn,
+            'winner' => $game->winner,
+            'is_draw' => $game->is_draw,
+        ]);
+    }
 }
