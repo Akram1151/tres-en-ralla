@@ -1,12 +1,11 @@
-
 <?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GameController;
+
 // API per moviments AJAX
 Route::patch('/api/games/{game}', [App\Http\Controllers\GameController::class, 'apiUpdate'])->name('games.api.update');
 
-use Illuminate\Support\Facades\Route;
-
-
-use App\Http\Controllers\GameController;
 
 Route::get('/', [GameController::class, 'index'])->name('games.index');
 Route::get('/games/create', [GameController::class, 'create'])->name('games.create');
